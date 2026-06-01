@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+/* Class-based themes: themeStore toggles `light` on <html> */
+@custom-variant light (&:where(.light, .light *));
+@custom-variant dark (&:where(html:not(.light), html:not(.light) *));
+
+@theme {
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-midnight: #0b1221;
+  --color-slate: #151e32;
+  --color-mist: #8b9bb8;
+  --color-paper: #f4f7fc;
+  --color-snow: #ffffff;
+  --color-mint: #2ee6a6;
+  --color-violet: #7c5cff;
+  --color-coral: #ff6b6b;
+  --color-amber: #ffb547;
+
+  --color-background: var(--color-midnight);
+  --color-foreground: #e8edf7;
+  --color-muted: var(--color-mist);
+  --color-card: color-mix(in srgb, var(--color-slate) 80%, transparent);
+  --color-border: color-mix(in srgb, var(--color-mist) 20%, transparent);
+  --color-accent: var(--color-mint);
+  --color-accent-secondary: var(--color-violet);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html.light {
+    --color-background: var(--color-paper);
+    --color-foreground: var(--color-midnight);
+    --color-muted: #5a6b8a;
+    --color-card: color-mix(in srgb, var(--color-snow) 90%, transparent);
+    --color-border: color-mix(in srgb, var(--color-midnight) 12%, transparent);
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased min-h-screen;
+  }
+
+  ::selection {
+    @apply bg-mint/30 text-foreground;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-violet;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-card/60 backdrop-blur-xl border border-border;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-mint to-violet bg-clip-text text-transparent;
+  }
+
+  .glow-mint {
+    box-shadow: 0 0 40px -10px color-mix(in srgb, var(--color-mint) 50%, transparent);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-mint px-4 py-2 text-sm font-semibold text-midnight transition hover:brightness-110 active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-border bg-card/80 px-4 py-2 text-sm font-medium text-foreground transition hover:border-mint/40 hover:bg-mint/5 active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm text-muted transition hover:text-foreground hover:bg-card/60;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-border bg-midnight/30 px-4 py-2.5 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-violet/40 light:bg-snow;
+  }
+
+  .input-inline {
+    @apply rounded-lg border border-border bg-midnight/30 px-3 py-1.5 text-sm light:bg-snow;
+  }
+
+  .kbd {
+    @apply rounded border border-border bg-midnight/50 px-1.5 py-0.5 font-mono text-[10px] text-muted;
+  }
+
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+    clip: rect(0, 0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
