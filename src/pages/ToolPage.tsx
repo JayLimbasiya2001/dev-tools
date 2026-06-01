@@ -86,8 +86,6 @@ export function ToolPage() {
             </div>
           </header>
 
-          <AdSlot placement="in-content" />
-
           <Suspense
             fallback={
               <div className="space-y-4">
@@ -99,8 +97,6 @@ export function ToolPage() {
             <ToolComponent />
           </Suspense>
 
-          <AdSlot placement="in-content" className="mt-6" />
-
           {related.length > 0 && (
             <section className="mt-12">
               <h2 className="font-display text-xl font-bold mb-4">Related Tools</h2>
@@ -108,8 +104,9 @@ export function ToolPage() {
             </section>
           )}
         </div>
-        <aside className="hidden lg:block">
-          <AdSlot placement="sidebar" />
+        <aside className="hidden lg:flex lg:flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+          <AdSlot placement="sidebar-primary" />
+          <AdSlot placement="sidebar-secondary" />
         </aside>
       </div>
     </>
