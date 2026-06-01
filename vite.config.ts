@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    minify: 'esbuild',
+    // Vite 8 defaults to Oxc minify; `esbuild` is no longer bundled
     sourcemap: false,
   },
   server: {
