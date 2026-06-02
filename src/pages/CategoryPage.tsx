@@ -8,7 +8,13 @@ import { ToolGrid } from '@/components/tools/ToolGrid';
 export function CategoryPage() {
   const { id } = useParams<{ id: string }>();
   const cat = id ? getCategory(id as CategoryId) : undefined;
-  const tools = id ? getToolsByCategory(id as CategoryId).map(({ component: _c, ...m }) => m) : [];
+  const tools = id
+    ? getToolsByCategory(id as CategoryId).map((t) => {
+        const { component, ...m } = t;
+        void component;
+        return m;
+      })
+    : [];
 
   if (!cat) {
     return <p>Category not found. <Link to="/categories" className="text-mint">Back</Link></p>;

@@ -40,7 +40,20 @@ export function BlogPostPage() {
       <article className="lg:grid lg:grid-cols-[1fr_240px] gap-10">
         <div>
           <header className="mb-8">
-            <p className="text-xs font-mono text-mint">{categoryLabel}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link to={`/blog/category/${post.category}`} className="text-xs font-mono text-mint hover:underline">
+                {categoryLabel}
+              </Link>
+              {post.tags.map((t) => (
+                <Link
+                  key={t}
+                  to={`/blog/tag/${encodeURIComponent(t)}`}
+                  className="text-[10px] px-2 py-0.5 rounded-full border border-border text-muted hover:text-mint hover:border-mint/30"
+                >
+                  #{t}
+                </Link>
+              ))}
+            </div>
             <h1 className="font-display text-3xl sm:text-4xl font-bold mt-2">{post.title}</h1>
             <p className="text-muted mt-3">{post.description}</p>
             <p className="text-xs text-muted mt-4">

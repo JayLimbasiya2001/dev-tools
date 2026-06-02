@@ -1,14 +1,39 @@
-import * as prettier from 'prettier/standalone';
-import prettierBabel from 'prettier/plugins/babel';
-import prettierEstree from 'prettier/plugins/estree';
-import prettierHtml from 'prettier/plugins/html';
-import prettierPostcss from 'prettier/plugins/postcss';
-import prettierYaml from 'prettier/plugins/yaml';
 import { format as formatSql } from 'sql-formatter';
 import yaml from 'js-yaml';
 import { marked } from 'marked';
+import type { Plugin as PrettierPlugin } from 'prettier';
 
-const prettierPlugins = [prettierBabel, prettierEstree, prettierHtml, prettierPostcss, prettierYaml];
+type PrettierStandalone = typeof import('prettier/standalone');
+
+let prettierCache:
+  | { prettier: PrettierStandalone; plugins: PrettierPlugin[] }
+  | undefined;
+
+async function loadPrettier() {
+  if (prettierCache) return prettierCache;
+
+  const [prettier, prettierBabel, prettierEstree, prettierHtml, prettierPostcss, prettierYaml] =
+    await Promise.all([
+      import('prettier/standalone'),
+      import('prettier/plugins/babel'),
+      import('prettier/plugins/estree'),
+      import('prettier/plugins/html'),
+      import('prettier/plugins/postcss'),
+      import('prettier/plugins/yaml'),
+    ]);
+
+  prettierCache = {
+    prettier,
+    plugins: [
+      prettierBabel.default as PrettierPlugin,
+      prettierEstree.default as PrettierPlugin,
+      prettierHtml.default as PrettierPlugin,
+      prettierPostcss.default as PrettierPlugin,
+      prettierYaml.default as PrettierPlugin,
+    ],
+  };
+  return prettierCache;
+}
 
 export function formatJson(input: string, minify = false): { output: string; error?: string } {
   try {
@@ -69,9 +94,10 @@ export async function formatWithPrettier(
   minify = false,
 ): Promise<{ output: string; error?: string }> {
   try {
+    const { prettier, plugins } = await loadPrettier();
     const output = await prettier.format(input, {
       parser,
-      plugins: prettierPlugins,
+      plugins,
       ...(minify ? { printWidth: 1_000_000 } : {}),
     });
     return { output: minify ? output.replace(/\n\s*/g, ' ').trim() : output };

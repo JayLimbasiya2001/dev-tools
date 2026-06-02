@@ -14,9 +14,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const navigate = useNavigate();
   const results = useMemo(() => (query ? searchTools(query) : TOOLS.slice(0, 12)), [query]);
 
-  useEffect(() => {
-    if (!open) setQuery('');
-  }, [open]);
+  // Reset query when closing, without setState-in-effect
+  if (!open && query) setQuery('');
 
   const go = (path: string) => {
     navigate(path);
@@ -94,7 +93,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   );
 }
 
-export function useCommandPalette() {
+/* eslint-disable react-refresh/only-export-components */
+function useCommandPaletteInternal() {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -109,3 +109,5 @@ export function useCommandPalette() {
   }, []);
   return { open, setOpen, toggle: () => setOpen((o) => !o) };
 }
+
+export { useCommandPaletteInternal as useCommandPalette };

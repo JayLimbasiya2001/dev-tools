@@ -1,4 +1,5 @@
 import type { ToolMeta } from '@/data/tools/types';
+import { getClusterLinks } from '@/data/tools/internal-links';
 
 export function getRelatedTools(
   current: ToolMeta,
@@ -20,4 +21,24 @@ export function getRelatedTools(
     .sort((a, b) => b.score - a.score);
 
   return scored.slice(0, limit).map((s) => s.tool);
+}
+
+/** Related tools engine: curated clusters first, then semantic scoring. */
+export function getRelatedToolsForToolPage(
+  current: ToolMeta,
+  all: ToolMeta[],
+  limit = 10,
+): ToolMeta[] {
+  const bySlug = new Map(all.map((t) => [t.slug, t]));
+
+  const curated = getClusterLinks(current.slug)
+    .map((slug) => bySlug.get(slug))
+    .filter(Boolean) as ToolMeta[];
+
+  const scored = getRelatedTools(current, all, 50);
+  const combined = [...curated, ...scored]
+    .filter((t) => t.slug !== current.slug);
+
+  const dedup = new Map(combined.map((t) => [t.slug, t]));
+  return [...dedup.values()].slice(0, limit);
 }

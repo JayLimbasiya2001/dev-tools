@@ -129,7 +129,11 @@ export function getTool(slug: string) {
 }
 
 export function getToolsMeta() {
-  return TOOLS.map(({ component: _c, ...meta }) => meta);
+  return TOOLS.map((t) => {
+    const { component, ...meta } = t;
+    void component;
+    return meta;
+  });
 }
 
 export function getToolsByCategory(category: string) {

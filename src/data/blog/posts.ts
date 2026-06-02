@@ -127,6 +127,16 @@ export function getPostsByCategory(category: BlogCategory) {
   return BLOG_POSTS.filter((p) => p.category === category);
 }
 
+export function getAllTags(): string[] {
+  const tags = new Set(BLOG_POSTS.flatMap((p) => p.tags));
+  return [...tags].sort((a, b) => a.localeCompare(b));
+}
+
+export function getPostsByTag(tag: string) {
+  const t = tag.toLowerCase();
+  return BLOG_POSTS.filter((p) => p.tags.some((x) => x.toLowerCase() === t));
+}
+
 export function getRelatedPosts(post: BlogPost, limit = 3) {
   return BLOG_POSTS.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, limit);
 }

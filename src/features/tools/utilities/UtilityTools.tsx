@@ -82,7 +82,7 @@ export function CronBuilderTool() {
 }
 
 export function TimestampConverterTool() {
-  const [ts, setTs] = useState(String(Date.now()));
+  const [ts, setTs] = useState(() => String(Date.now()));
   const parsed = useMemo(() => {
     const n = Number(ts);
     if (Number.isNaN(n)) return null;

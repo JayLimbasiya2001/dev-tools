@@ -16,7 +16,11 @@ export function ToolsPage() {
   const tools = useMemo(() => {
     let list = query ? searchTools(query) : TOOLS;
     if (showFav) list = list.filter((t) => favorites.includes(t.slug));
-    return list.map(({ component: _c, ...m }) => m);
+    return list.map((t) => {
+      const { component, ...m } = t;
+      void component;
+      return m;
+    });
   }, [query, showFav, favorites]);
 
   return (
@@ -37,10 +41,10 @@ export function ToolsPage() {
             { name: 'Tools', path: '/tools' },
           ]),
           itemListSchema(
-            TOOLS.map(({ component: _c, ...t }) => ({
-              name: t.name,
-              url: `/tools/${t.slug}`,
-            })),
+            TOOLS.map((t) => {
+              void t.component;
+              return { name: t.name, url: `/tools/${t.slug}` };
+            }),
             'Velomint Developer Tools',
           ),
         ]}

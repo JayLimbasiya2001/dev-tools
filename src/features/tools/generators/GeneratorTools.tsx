@@ -7,10 +7,10 @@ import { slugify } from '@/lib/utils';
 
 export function UuidGeneratorTool() {
   const [count, setCount] = useState(5);
-  const [version, setVersion] = useState<'v4' | 'v1'>('v4');
+  const [version, setVersion] = useState<'v4'>('v4');
   const output = useMemo(
     () => Array.from({ length: count }, () => uuidv4()).join('\n'),
-    [count, version],
+    [count],
   );
   return (
     <ToolWorkbench>

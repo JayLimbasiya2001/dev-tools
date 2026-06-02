@@ -1,16 +1,18 @@
 import { Suspense, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SeoHead } from '@/features/seo/SeoHead';
-import { breadcrumbSchema, toolSchema, toolSeoTitle, toolSeoDescription, toolSeoKeywords, webPageSchema } from '@/features/seo/schemas';
+import { breadcrumbSchema, faqSchema, toolSchema, toolSeoTitle, toolSeoDescription, toolSeoKeywords, webPageSchema } from '@/features/seo/schemas';
 import { resolveSiteUrl } from '@/config/site-url';
 import { getTool, TOOLS } from '@/data/tools/registry';
 import { getCategory } from '@/data/categories';
 import { useToolStore } from '@/stores/toolStore';
-import { getRelatedTools } from '@/lib/related-tools';
+import { getRelatedToolsForToolPage } from '@/lib/related-tools';
 import { ToolGrid } from '@/components/tools/ToolGrid';
 import { ToolCardSkeleton } from '@/components/ui/Skeleton';
 import { AdSlot } from '@/features/ads/AdSlot';
 import { copyToClipboard } from '@/lib/clipboard';
+import { buildToolContent } from '@/features/tool-seo/buildContent';
+import { ToolContentSections, ToolHero, ToolToc, TrustBadges } from '@/features/tool-seo/ToolLandingSections';
 
 export function ToolPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -34,8 +36,13 @@ export function ToolPage() {
 
   const cat = getCategory(tool.category);
   const ToolComponent = tool.component;
-  const allMeta = TOOLS.map(({ component: _c, ...m }) => m);
-  const related = getRelatedTools(tool, allMeta);
+  const allMeta = TOOLS.map((t) => {
+    const { component, ...m } = t;
+    void component;
+    return m;
+  });
+  const related = getRelatedToolsForToolPage(tool, allMeta, 9);
+  const content = buildToolContent(tool);
   const shareUrl = `${resolveSiteUrl()}/tools/${tool.slug}`;
 
   return (
@@ -57,6 +64,7 @@ export function ToolPage() {
             { name: tool.name, path: `/tools/${tool.slug}` },
           ]),
           toolSchema(tool),
+          faqSchema(content.faqs),
         ]}
       />
 
@@ -72,36 +80,62 @@ export function ToolPage() {
         </ol>
       </nav>
 
-      <div className="lg:grid lg:grid-cols-[1fr_280px] gap-8">
-        <div>
-          <header className="mb-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-mono text-violet mb-1">{cat?.icon} {cat?.name}</p>
-                <h1 className="font-display text-3xl font-bold">{tool.name}</h1>
-                <p className="text-muted mt-2 max-w-2xl">{tool.description}</p>
-              </div>
-              <div className="flex gap-2">
-                <button type="button" className="btn-secondary text-xs" onClick={() => toggleFavorite(tool.slug)}>
+      <div className="lg:grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+        <div className="space-y-10">
+          <ToolHero
+            tool={tool}
+            category={cat}
+            highlights={content.heroHighlights}
+            actions={
+              <>
+                <a href="#tool" className="btn-primary text-sm">
+                  Use tool
+                </a>
+                <button
+                  type="button"
+                  className="btn-secondary text-sm"
+                  onClick={() => toggleFavorite(tool.slug)}
+                >
                   {isFavorite ? '★ Saved' : '☆ Save'}
                 </button>
-                <button type="button" className="btn-secondary text-xs" onClick={() => copyToClipboard(shareUrl, 'Link copied')}>
-                  Share
+                <button
+                  type="button"
+                  className="btn-secondary text-sm"
+                  onClick={() => copyToClipboard(shareUrl, 'Link copied')}
+                >
+                  Share link
                 </button>
-              </div>
-            </div>
-          </header>
-
-          <Suspense
-            fallback={
-              <div className="space-y-4">
-                <ToolCardSkeleton />
-                <ToolCardSkeleton />
-              </div>
+              </>
             }
-          >
-            <ToolComponent />
-          </Suspense>
+          />
+
+          <TrustBadges />
+
+          <section id="tool" className="scroll-mt-28">
+            <h2 className="font-display text-xl sm:text-2xl font-bold mb-4">
+              Tool
+            </h2>
+            <div className="glass rounded-2xl p-4">
+              <Suspense
+                fallback={
+                  <div className="space-y-4">
+                    <ToolCardSkeleton />
+                    <ToolCardSkeleton />
+                  </div>
+                }
+              >
+                <ToolComponent />
+              </Suspense>
+            </div>
+          </section>
+
+          <AdSlot placement="in-content" />
+
+          <ToolContentSections
+            tool={tool}
+            content={content}
+            relatedSlugs={related.map((t) => ({ slug: t.slug, name: t.name }))}
+          />
 
           {related.length > 0 && (
             <section className="mt-12">
@@ -110,7 +144,9 @@ export function ToolPage() {
             </section>
           )}
         </div>
+
         <aside className="hidden lg:flex lg:flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+          <ToolToc />
           <AdSlot placement="sidebar-primary" />
           <AdSlot placement="sidebar-secondary" />
         </aside>

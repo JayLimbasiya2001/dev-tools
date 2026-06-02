@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -14,6 +15,9 @@ const PrivacyPage = lazy(() => import('@/pages/LegalPage').then((m) => ({ defaul
 const TermsPage = lazy(() => import('@/pages/LegalPage').then((m) => ({ default: m.TermsPage })));
 const BlogPage = lazy(() => import('@/pages/BlogPage').then((m) => ({ default: m.BlogPage })));
 const BlogPostPage = lazy(() => import('@/pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })));
+const BlogCategoryPage = lazy(() => import('@/pages/BlogCategoryPage').then((m) => ({ default: m.BlogCategoryPage })));
+const BlogTagPage = lazy(() => import('@/pages/BlogTagPage').then((m) => ({ default: m.BlogTagPage })));
+const BlogIdeasPage = lazy(() => import('@/pages/BlogIdeasPage').then((m) => ({ default: m.BlogIdeasPage })));
 const ChangelogPage = lazy(() => import('@/pages/ChangelogPage').then((m) => ({ default: m.ChangelogPage })));
 
 function Lazy({ children }: { children: React.ReactNode }) {
@@ -39,6 +43,9 @@ export const router = createBrowserRouter([
       { path: 'privacy', element: <Lazy><PrivacyPage /></Lazy> },
       { path: 'terms', element: <Lazy><TermsPage /></Lazy> },
       { path: 'blog', element: <Lazy><BlogPage /></Lazy> },
+      { path: 'blog/ideas', element: <Lazy><BlogIdeasPage /></Lazy> },
+      { path: 'blog/category/:id', element: <Lazy><BlogCategoryPage /></Lazy> },
+      { path: 'blog/tag/:tag', element: <Lazy><BlogTagPage /></Lazy> },
       { path: 'blog/:slug', element: <Lazy><BlogPostPage /></Lazy> },
       { path: 'changelog', element: <Lazy><ChangelogPage /></Lazy> },
     ],

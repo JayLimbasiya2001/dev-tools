@@ -14,15 +14,22 @@ function CodecTool({
 }) {
   const [input, setInput] = useState(sample);
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [error, setError] = useState('');
 
   const output = useMemo(() => {
     try {
-      setError('');
       return mode === 'encode' ? encode(input) : decode(input);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Operation failed');
+    } catch {
       return '';
+    }
+  }, [input, mode, encode, decode]);
+
+  const error = useMemo(() => {
+    try {
+      // compute-only: derive error from current inputs
+      void (mode === 'encode' ? encode(input) : decode(input));
+      return '';
+    } catch (e) {
+      return e instanceof Error ? e.message : 'Operation failed';
     }
   }, [input, mode, encode, decode]);
 
@@ -67,17 +74,27 @@ export const HtmlCodecTool = () => (
 
 export function JwtDecoderTool() {
   const [token, setToken] = useState('');
-  const [error, setError] = useState('');
   const parts = useMemo(() => {
     try {
-      setError('');
       const [header, payload, signature] = token.split('.');
       if (!header || !payload) throw new Error('Invalid JWT structure');
       const decode = (p: string) => JSON.stringify(JSON.parse(atob(p.replace(/-/g, '+').replace(/_/g, '/'))), null, 2);
       return { header: decode(header), payload: decode(payload), signature: signature ?? '' };
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Invalid JWT');
+    } catch {
       return null;
+    }
+  }, [token]);
+
+  const error = useMemo(() => {
+    try {
+      const [header, payload] = token.split('.');
+      if (!token) return '';
+      if (!header || !payload) throw new Error('Invalid JWT structure');
+      JSON.parse(atob(header.replace(/-/g, '+').replace(/_/g, '/')));
+      JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+      return '';
+    } catch (e) {
+      return e instanceof Error ? e.message : 'Invalid JWT';
     }
   }, [token]);
 

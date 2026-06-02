@@ -8,6 +8,7 @@ import { CATEGORIES } from '@/data/categories';
 import { ToolGrid } from '@/components/tools/ToolGrid';
 import { useToolStore, getTrendingSlugs } from '@/stores/toolStore';
 import { BRAND } from '@/config/brand';
+import { BLOG_POSTS } from '@/data/blog/posts';
 
 const FAQS = [
   { question: 'Is Velomint free to use?', answer: 'Yes. All 70+ tools are free and run entirely in your browser with no account required.' },
@@ -20,7 +21,8 @@ export function HomePage() {
   const recent = useToolStore((s) => s.recent);
   const trendingSlugs = getTrendingSlugs(6);
   const toMeta = (t: (typeof TOOLS)[number]) => {
-    const { component: _c, ...m } = t;
+    const { component, ...m } = t;
+    void component;
     return m;
   };
 
@@ -40,6 +42,7 @@ export function HomePage() {
 
   const searchResults = query ? searchTools(query).map(toMeta) : [];
   const toolsMeta = TOOLS.map(toMeta);
+  const blogPreview = BLOG_POSTS.slice(0, 2);
 
   return (
     <>
@@ -57,10 +60,10 @@ export function HomePage() {
             path: '/',
           }),
           itemListSchema(
-            TOOLS.filter((t) => t.trending).map(({ component: _c, ...t }) => ({
-              name: t.name,
-              url: `/tools/${t.slug}`,
-            })),
+            TOOLS.filter((t) => t.trending).map((t) => {
+              void t.component;
+              return { name: t.name, url: `/tools/${t.slug}` };
+            }),
             'Trending Developer Tools',
           ),
           faqSchema(FAQS),
@@ -101,6 +104,23 @@ export function HomePage() {
 
       {!query && (
         <>
+          <section className="mb-12">
+            <h2 className="font-display text-2xl font-bold mb-4">Why Velomint</h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: 'Privacy-first', desc: 'Most tools run locally in your browser. No uploads for standard workflows.' },
+                { title: 'Premium UX', desc: 'Keyboard shortcuts, command palette, skeleton loaders, and polished motion.' },
+                { title: 'Discoverability', desc: 'Categories, tags, trending, recent tools, and related-tool suggestions.' },
+                { title: 'SEO-friendly', desc: 'Every tool page is a complete landing page with schema and FAQs.' },
+              ].map((c) => (
+                <div key={c.title} className="glass rounded-2xl p-6">
+                  <p className="text-mint font-semibold">{c.title}</p>
+                  <p className="text-sm text-muted mt-2">{c.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {recentTools.length > 0 && (
             <section className="mb-12">
               <h2 className="font-display text-2xl font-bold mb-4">Recently Used</h2>
@@ -136,6 +156,24 @@ export function HomePage() {
               <Link to="/tools" className="text-sm text-mint hover:underline">View all →</Link>
             </div>
             <ToolGrid tools={toolsMeta.slice(0, 9)} />
+          </section>
+
+          <section className="mt-16">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-2xl font-bold">From the Blog</h2>
+              <Link to="/blog" className="text-sm text-mint hover:underline">Read more →</Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {blogPreview.map((post) => (
+                <article key={post.slug} className="glass rounded-2xl p-6 hover:border-mint/30 transition">
+                  <p className="text-xs font-mono text-violet uppercase">{post.category}</p>
+                  <h3 className="font-display text-lg font-semibold mt-2">
+                    <Link to={`/blog/${post.slug}`} className="hover:text-mint">{post.title}</Link>
+                  </h3>
+                  <p className="text-sm text-muted mt-2 line-clamp-2">{post.description}</p>
+                </article>
+              ))}
+            </div>
           </section>
 
           <section className="mt-16 glass rounded-2xl p-8">
