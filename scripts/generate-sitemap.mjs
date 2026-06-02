@@ -5,15 +5,16 @@ import { dirname, join } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 
-/** Resolves canonical URL at build time (Vercel-aware). */
+/** Always use production URL in sitemap — never Vercel preview deployment URLs. */
+const CANONICAL_SITE_URL = 'https://velomint.vercel.app';
+
 function getSiteUrl() {
-  if (process.env.VITE_SITE_URL) {
+  if (process.env.VITE_SITE_URL?.trim()) {
     return process.env.VITE_SITE_URL.replace(/\/$/, '');
   }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`;
-  }
-  return 'https://velomint.vercel.app';
+  // Do NOT use VERCEL_URL — preview builds get hash URLs like
+  // velomint-d7xnh9k89-jays-projects-644deddb.vercel.app
+  return CANONICAL_SITE_URL;
 }
 
 function extractSlugs(filePath, pattern) {
@@ -59,7 +60,7 @@ const staticPages = [
 
 const urls = [
   ...staticPages.map((p) => ({
-    loc: `${SITE_URL}${p.path === '/' ? '' : p.path}`,
+    loc: p.path === '/' ? `${SITE_URL}/` : `${SITE_URL}${p.path}`,
     priority: p.priority,
     changefreq: p.changefreq,
     lastmod: TODAY,
@@ -108,7 +109,6 @@ const robotsTxt = `# Velomint — ${SITE_URL}
 User-agent: *
 Allow: /
 
-# Block non-content paths
 Disallow: /assets/
 
 Sitemap: ${SITE_URL}/sitemap.xml
