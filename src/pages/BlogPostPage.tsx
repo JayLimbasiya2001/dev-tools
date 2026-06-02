@@ -25,6 +25,8 @@ export function BlogPostPage() {
         description={post.description}
         path={`/blog/${post.slug}`}
         type="article"
+        keywords={[...post.tags, post.category, 'developer blog', 'Velomint']}
+        publishedTime={post.datePublished}
         jsonLd={[
           articleSchema(post),
           breadcrumbSchema([

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SeoHead } from '@/features/seo/SeoHead';
-import { breadcrumbSchema } from '@/features/seo/schemas';
+import { breadcrumbSchema, itemListSchema, webPageSchema } from '@/features/seo/schemas';
 import { TOOLS, searchTools } from '@/data/tools/registry';
 import { ToolGrid } from '@/components/tools/ToolGrid';
 import { useToolStore } from '@/stores/toolStore';
@@ -22,13 +22,28 @@ export function ToolsPage() {
   return (
     <>
       <SeoHead
-        title="All Developer Tools"
-        description="Browse 70+ free online developer tools for JSON, XML, encoding, API testing, CSS generation, and more."
+        title="All Developer Tools — 70+ Free Online Utilities"
+        description="Browse 70+ free online developer tools for JSON formatting, JWT decoding, UUID generation, API testing, CSS generation, encoding, conversion, and more. No signup required."
         path="/tools"
-        jsonLd={breadcrumbSchema([
-          { name: 'Home', path: '/' },
-          { name: 'Tools', path: '/tools' },
-        ])}
+        keywords={['developer tools', 'online tools', 'free dev tools', 'json formatter', 'web utilities']}
+        jsonLd={[
+          webPageSchema({
+            name: 'All Developer Tools',
+            description: 'Complete directory of Velomint developer utilities.',
+            path: '/tools',
+          }),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Tools', path: '/tools' },
+          ]),
+          itemListSchema(
+            TOOLS.map(({ component: _c, ...t }) => ({
+              name: t.name,
+              url: `/tools/${t.slug}`,
+            })),
+            'Velomint Developer Tools',
+          ),
+        ]}
       />
       <header className="mb-8">
         <h1 className="font-display text-3xl font-bold">All Tools</h1>

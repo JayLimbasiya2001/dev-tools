@@ -1,7 +1,6 @@
 export const BRAND = {
   name: 'Velomint',
   tagline: 'Ship sharper. Build faster.',
-  domain: 'https://velomint.dev',
   email: 'hello@velomint.dev',
   twitter: '@velomint',
   founded: '2026',

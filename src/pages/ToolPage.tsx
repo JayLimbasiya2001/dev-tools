@@ -1,7 +1,8 @@
 import { Suspense, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SeoHead } from '@/features/seo/SeoHead';
-import { breadcrumbSchema, toolSchema } from '@/features/seo/schemas';
+import { breadcrumbSchema, toolSchema, toolSeoTitle, toolSeoDescription, toolSeoKeywords, webPageSchema } from '@/features/seo/schemas';
+import { resolveSiteUrl } from '@/config/site-url';
 import { getTool, TOOLS } from '@/data/tools/registry';
 import { getCategory } from '@/data/categories';
 import { useToolStore } from '@/stores/toolStore';
@@ -10,7 +11,6 @@ import { ToolGrid } from '@/components/tools/ToolGrid';
 import { ToolCardSkeleton } from '@/components/ui/Skeleton';
 import { AdSlot } from '@/features/ads/AdSlot';
 import { copyToClipboard } from '@/lib/clipboard';
-import { BRAND } from '@/config/brand';
 
 export function ToolPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -36,15 +36,21 @@ export function ToolPage() {
   const ToolComponent = tool.component;
   const allMeta = TOOLS.map(({ component: _c, ...m }) => m);
   const related = getRelatedTools(tool, allMeta);
-  const shareUrl = `${BRAND.domain}/tools/${tool.slug}`;
+  const shareUrl = `${resolveSiteUrl()}/tools/${tool.slug}`;
 
   return (
     <>
       <SeoHead
-        title={`${tool.name} — Free Online Tool`}
-        description={tool.description}
+        title={toolSeoTitle(tool)}
+        description={toolSeoDescription(tool)}
         path={`/tools/${tool.slug}`}
+        keywords={toolSeoKeywords(tool)}
         jsonLd={[
+          webPageSchema({
+            name: tool.name,
+            description: tool.description,
+            path: `/tools/${tool.slug}`,
+          }),
           breadcrumbSchema([
             { name: 'Home', path: '/' },
             { name: 'Tools', path: '/tools' },

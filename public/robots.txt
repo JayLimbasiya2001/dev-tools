@@ -1,4 +1,8 @@
+# Velomint — https://velomint.vercel.app
 User-agent: *
 Allow: /
 
-Sitemap: https://velomint.dev/sitemap.xml
+# Block non-content paths
+Disallow: /assets/
+
+Sitemap: https://velomint.vercel.app/sitemap.xml

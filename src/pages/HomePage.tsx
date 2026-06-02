@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SeoHead } from '@/features/seo/SeoHead';
-import { organizationSchema, websiteSchema, faqSchema } from '@/features/seo/schemas';
+import { organizationSchema, websiteSchema, faqSchema, webPageSchema, itemListSchema } from '@/features/seo/schemas';
 import { TOOLS, searchTools } from '@/data/tools/registry';
 import { CATEGORIES } from '@/data/categories';
 import { ToolGrid } from '@/components/tools/ToolGrid';
@@ -44,7 +44,27 @@ export function HomePage() {
   return (
     <>
       <SeoHead
-        jsonLd={[organizationSchema(), websiteSchema(), faqSchema(FAQS)]}
+        title="Free Developer Tools — JSON, JWT, UUID, API & More"
+        description="Velomint offers 70+ free browser-based developer tools. Format JSON, decode JWT, generate UUIDs, test APIs, build CSS — fast, private, no signup."
+        path="/"
+        keywords={['developer tools', 'online dev tools', 'json formatter', 'jwt decoder', 'free tools', 'Velomint']}
+        jsonLd={[
+          organizationSchema(),
+          websiteSchema(),
+          webPageSchema({
+            name: 'Velomint Developer Tools',
+            description: 'Premium free developer tools platform.',
+            path: '/',
+          }),
+          itemListSchema(
+            TOOLS.filter((t) => t.trending).map(({ component: _c, ...t }) => ({
+              name: t.name,
+              url: `/tools/${t.slug}`,
+            })),
+            'Trending Developer Tools',
+          ),
+          faqSchema(FAQS),
+        ]}
       />
 
       <section className="relative overflow-hidden rounded-3xl glass p-8 sm:p-12 mb-12">
