@@ -12,7 +12,7 @@ import { ToolCardSkeleton } from '@/components/ui/Skeleton';
 import { AdSlot } from '@/features/ads/AdSlot';
 import { copyToClipboard } from '@/lib/clipboard';
 import { buildToolContent } from '@/features/tool-seo/buildContent';
-import { ToolContentSections, ToolHero, ToolToc, TrustBadges } from '@/features/tool-seo/ToolLandingSections';
+import { ToolContentSections, ToolHero, ToolToc, TrustBadges, SocialShareBar } from '@/features/tool-seo/ToolLandingSections';
 
 export function ToolPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -45,6 +45,9 @@ export function ToolPage() {
   const content = buildToolContent(tool);
   const shareUrl = `${resolveSiteUrl()}/tools/${tool.slug}`;
 
+  const categoryName = cat?.name ?? 'Developer';
+  const categoryHubName = `${categoryName} Tools`;
+
   return (
     <>
       <SeoHead
@@ -60,7 +63,8 @@ export function ToolPage() {
           }),
           breadcrumbSchema([
             { name: 'Home', path: '/' },
-            { name: 'Tools', path: '/tools' },
+            { name: 'Developer Tools', path: '/tools' },
+            { name: categoryHubName, path: `/categories/${tool.category}` },
             { name: tool.name, path: `/tools/${tool.slug}` },
           ]),
           toolSchema(tool),
@@ -68,20 +72,20 @@ export function ToolPage() {
         ]}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted mb-4">
-        <ol className="flex flex-wrap gap-2">
-          <li><Link to="/" className="hover:text-mint">Home</Link></li>
+      <nav aria-label="Breadcrumb" className="text-sm text-muted mb-4 font-mono">
+        <ol className="flex flex-wrap items-center gap-2">
+          <li><Link to="/" className="hover:text-mint transition">Home</Link></li>
           <li>/</li>
-          <li><Link to="/tools" className="hover:text-mint">Tools</Link></li>
+          <li><Link to="/tools" className="hover:text-mint transition">Developer Tools</Link></li>
           <li>/</li>
-          <li><Link to={`/categories/${tool.category}`} className="hover:text-mint">{cat?.name}</Link></li>
+          <li><Link to={`/categories/${tool.category}`} className="hover:text-mint transition">{categoryHubName}</Link></li>
           <li>/</li>
-          <li className="text-foreground">{tool.name}</li>
+          <li className="text-foreground font-semibold">{tool.name}</li>
         </ol>
       </nav>
 
       <div className="lg:grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-        <div className="space-y-10">
+        <div className="space-y-8">
           <ToolHero
             tool={tool}
             category={cat}
@@ -89,21 +93,21 @@ export function ToolPage() {
             actions={
               <>
                 <a href="#tool" className="btn-primary text-sm">
-                  Use tool
+                  ⚡ Open Tool Workspace
                 </a>
                 <button
                   type="button"
                   className="btn-secondary text-sm"
                   onClick={() => toggleFavorite(tool.slug)}
                 >
-                  {isFavorite ? '★ Saved' : '☆ Save'}
+                  {isFavorite ? '★ Saved in Favorites' : '☆ Save Tool'}
                 </button>
                 <button
                   type="button"
                   className="btn-secondary text-sm"
                   onClick={() => copyToClipboard(shareUrl, 'Link copied')}
                 >
-                  Share link
+                  🔗 Share URL
                 </button>
               </>
             }
@@ -111,11 +115,18 @@ export function ToolPage() {
 
           <TrustBadges />
 
+          <SocialShareBar title={toolSeoTitle(tool)} url={shareUrl} />
+
           <section id="tool" className="scroll-mt-28">
-            <h2 className="font-display text-xl sm:text-2xl font-bold mb-4">
-              Tool
-            </h2>
-            <div className="glass rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground">
+                Interactive {tool.name} Workspace
+              </h2>
+              <span className="text-xs font-mono text-mint bg-mint/10 px-3 py-1 rounded-full border border-mint/20">
+                100% Client-Side
+              </span>
+            </div>
+            <div className="glass rounded-3xl p-4 sm:p-6 border border-border/80 shadow-2xl">
               <Suspense
                 fallback={
                   <div className="space-y-4">
@@ -139,7 +150,7 @@ export function ToolPage() {
 
           {related.length > 0 && (
             <section className="mt-12">
-              <h2 className="font-display text-xl font-bold mb-4">Related Tools</h2>
+              <h2 className="font-display text-xl font-bold mb-4">Related Developer Utilities</h2>
               <ToolGrid tools={related} />
             </section>
           )}
@@ -154,3 +165,4 @@ export function ToolPage() {
     </>
   );
 }
+

@@ -187,13 +187,32 @@ export function articleSchema(article: {
   };
 }
 
-/** SEO-optimized title for tool pages */
+/** SEO-optimized title for tool pages (50-60 characters, high conversion intent) */
 export function toolSeoTitle(tool: ToolMeta): string {
-  return `${tool.name} Online — Free Developer Tool`;
+  if (tool.slug === 'json-formatter') {
+    return `Free JSON Formatter & Validator Online | Beautify & Minify JSON | ${BRAND.name}`;
+  }
+  if (tool.name.toLowerCase().includes('formatter')) {
+    const subject = tool.name.replace(/ Formatter/i, '');
+    return `Free ${tool.name} & Validator Online | Beautify & Minify ${subject} | ${BRAND.name}`;
+  }
+  if (tool.name.toLowerCase().includes('decoder') || tool.name.toLowerCase().includes('encoder')) {
+    return `Free ${tool.name} Online | Fast & Secure Encoder Decoder | ${BRAND.name}`;
+  }
+  if (tool.name.toLowerCase().includes('generator')) {
+    return `Free ${tool.name} Online | Instant Random Generator | ${BRAND.name}`;
+  }
+  if (tool.name.toLowerCase().includes('converter')) {
+    return `Free ${tool.name} Online | Transform Data Instantly | ${BRAND.name}`;
+  }
+  return `Free ${tool.name} Online | Developer Utility & Playground | ${BRAND.name}`;
 }
 
 export function toolSeoDescription(tool: ToolMeta): string {
-  return `${tool.description} Use ${tool.name} free in your browser — no signup, no upload, instant results on ${BRAND.name}.`;
+  if (tool.slug === 'json-formatter') {
+    return 'Format, validate, beautify and minify JSON instantly. Secure browser-based JSON Formatter with syntax highlighting, file upload and error detection.';
+  }
+  return `${tool.description} Fast, secure, browser-based ${tool.name} with syntax highlighting, sample data, and instant clipboard export on ${BRAND.name}.`;
 }
 
 export function toolSeoKeywords(tool: ToolMeta): string[] {
@@ -203,6 +222,8 @@ export function toolSeoKeywords(tool: ToolMeta): string[] {
     tool.name.toLowerCase(),
     'free online tool',
     'developer tools',
+    'browser tool',
     BRAND.name.toLowerCase(),
   ];
 }
+

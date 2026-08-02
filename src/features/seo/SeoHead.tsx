@@ -51,7 +51,7 @@ export function SeoHead({
   jsonLd,
 }: SeoHeadProps) {
   const siteUrl = resolveSiteUrl();
-  const fullTitle = title ? `${title} | ${BRAND.name}` : SITE.defaultTitle;
+  const fullTitle = title ? (title.includes(BRAND.name) ? title : `${title} | ${BRAND.name}`) : SITE.defaultTitle;
   const url = `${siteUrl}${path}`;
   const ogImage = image ?? `${siteUrl}/og-image.svg`;
   const ogImageAlt = imageAlt ?? `${BRAND.name} — ${BRAND.tagline}`;

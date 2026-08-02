@@ -3,6 +3,7 @@ export const BRAND = {
   tagline: 'Ship sharper. Build faster.',
   email: 'hello@velomint.dev',
   twitter: '@velomint',
+  github: 'https://github.com',
   founded: '2026',
 } as const;
 
