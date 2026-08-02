@@ -117,16 +117,16 @@ export function ToolPage() {
 
           <SocialShareBar title={toolSeoTitle(tool)} url={shareUrl} />
 
-          <section id="tool" className="scroll-mt-28">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground">
-                Interactive {tool.name} Workspace
+          <section id="tool" className="scroll-mt-24">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-display text-lg font-bold text-foreground">
+                {tool.name} Interface
               </h2>
-              <span className="text-xs font-mono text-mint bg-mint/10 px-3 py-1 rounded-full border border-mint/20">
-                100% Client-Side
+              <span className="badge badge-accent">
+                Client-Side Engine
               </span>
             </div>
-            <div className="glass rounded-3xl p-4 sm:p-6 border border-border/80 shadow-2xl">
+            <div className="surface-card p-5 sm:p-6 shadow-sm">
               <Suspense
                 fallback={
                   <div className="space-y-4">

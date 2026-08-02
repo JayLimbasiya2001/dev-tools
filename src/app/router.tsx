@@ -20,6 +20,8 @@ const BlogTagPage = lazy(() => import('@/pages/BlogTagPage').then((m) => ({ defa
 const BlogIdeasPage = lazy(() => import('@/pages/BlogIdeasPage').then((m) => ({ default: m.BlogIdeasPage })));
 const ChangelogPage = lazy(() => import('@/pages/ChangelogPage').then((m) => ({ default: m.ChangelogPage })));
 
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
+
 function Lazy({ children }: { children: React.ReactNode }) {
   return (
     <Suspense fallback={<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{Array.from({ length: 6 }, (_, i) => <ToolCardSkeleton key={i} />)}</div>}>
@@ -60,6 +62,7 @@ export const router = createBrowserRouter([
       { path: 'blog/:slug', element: <Lazy><BlogPostPage /></Lazy> },
       { path: 'changelog', element: <Lazy><ChangelogPage /></Lazy> },
       { path: ':slug', element: <Lazy><ToolPage /></Lazy> },
+      { path: '*', element: <Lazy><NotFoundPage /></Lazy> },
     ],
   },
 ]);

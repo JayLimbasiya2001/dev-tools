@@ -6,28 +6,37 @@
 @custom-variant dark (&:where(html:not(.light), html:not(.light) *));
 
 @theme {
-  --font-display: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-display: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  --color-midnight: #070b14;
-  --color-slate: #111827;
-  --color-slate-card: #0f172a;
-  --color-mist: #94a3b8;
-  --color-paper: #f8fafc;
-  --color-snow: #ffffff;
-  --color-mint: #2ee6a6;
-  --color-violet: #818cf8;
-  --color-coral: #f87171;
-  --color-amber: #fbbf24;
+  /* Linear / Vercel Dark Color Palette */
+  --color-dark-bg: #0d1117;
+  --color-dark-surface: #161b22;
+  --color-dark-elevated: #21262d;
+  --color-dark-border: #30363d;
+  --color-dark-text: #f0f6fc;
+  --color-dark-muted: #8b949e;
 
-  --color-background: var(--color-midnight);
-  --color-foreground: #f1f5f9;
-  --color-muted: var(--color-mist);
-  --color-card: color-mix(in srgb, var(--color-slate-card) 75%, transparent);
-  --color-border: color-mix(in srgb, #334155 45%, transparent);
-  --color-accent: var(--color-mint);
-  --color-accent-secondary: var(--color-violet);
+  /* Light Mode Color Palette */
+  --color-light-bg: #ffffff;
+  --color-light-surface: #f6f8fa;
+  --color-light-elevated: #ffffff;
+  --color-light-border: #d0d7de;
+  --color-light-text: #1f2328;
+  --color-light-muted: #656d76;
+
+  /* Single Accent Color: Emerald Mint */
+  --color-accent: #10b981;
+  --color-accent-hover: #059669;
+  --color-accent-subtle: rgba(16, 185, 129, 0.1);
+  --color-accent-border: rgba(16, 185, 129, 0.25);
+
+  --color-background: var(--color-dark-bg);
+  --color-foreground: var(--color-dark-text);
+  --color-muted: var(--color-dark-muted);
+  --color-card: var(--color-dark-surface);
+  --color-border: var(--color-dark-border);
 }
 
 @layer base {
@@ -38,26 +47,27 @@
 
   html.light {
     color-scheme: light;
-    --color-background: var(--color-paper);
-    --color-foreground: var(--color-midnight);
-    --color-muted: #475569;
-    --color-card: color-mix(in srgb, var(--color-snow) 92%, transparent);
-    --color-border: color-mix(in srgb, #cbd5e1 60%, transparent);
+    --color-background: var(--color-light-bg);
+    --color-foreground: var(--color-light-text);
+    --color-muted: var(--color-light-muted);
+    --color-card: var(--color-light-surface);
+    --color-border: var(--color-light-border);
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased min-h-screen selection:bg-mint/30 selection:text-foreground;
-    background-image: 
-      radial-gradient(at 50% 0%, color-mix(in srgb, var(--color-violet) 12%, transparent) 0px, transparent 75%),
-      radial-gradient(at 100% 100%, color-mix(in srgb, var(--color-mint) 8%, transparent) 0px, transparent 65%);
-    background-attachment: fixed;
+    @apply bg-background text-foreground font-body antialiased min-h-screen selection:bg-accent/30 selection:text-foreground;
+  }
+
+  /* Crisp Linear / Vercel Headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-foreground font-semibold;
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-violet/80;
+    @apply outline-2 outline-offset-2 outline-accent;
   }
 
-  /* Custom high-tech scrollbar */
+  /* Minimalist Monospace Scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -66,90 +76,59 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: color-mix(in srgb, var(--color-mist) 25%, transparent);
-    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-muted) 30%, transparent);
+    border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--color-mint) 50%, transparent);
+    background: var(--color-accent);
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-card/70 backdrop-blur-2xl border border-border/80 shadow-lg;
-    box-shadow: 
-      0 4px 20px -2px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  .surface-card {
+    @apply bg-card border border-border rounded-xl transition-all duration-150;
   }
 
-  .glass-hover {
-    @apply transition-all duration-200 hover:border-mint/40 hover:bg-card/90;
-    &:hover {
-      box-shadow: 
-        0 8px 30px -4px rgba(46, 230, 166, 0.12),
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-    }
+  .surface-card-hover {
+    @apply transition-colors duration-150 hover:border-neutral-500 light:hover:border-neutral-400;
   }
 
-  .bg-grid-pattern {
-    background-size: 32px 32px;
-    background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  }
-
-  .text-gradient {
-    @apply bg-gradient-to-r from-mint via-emerald-400 to-violet bg-clip-text text-transparent;
-  }
-
-  .text-gradient-purple {
-    @apply bg-gradient-to-r from-violet via-indigo-400 to-mint bg-clip-text text-transparent;
-  }
-
-  .glow-mint {
-    box-shadow: 0 0 35px -5px color-mix(in srgb, var(--color-mint) 45%, transparent);
-  }
-
-  .glow-violet {
-    box-shadow: 0 0 35px -5px color-mix(in srgb, var(--color-violet) 45%, transparent);
+  .accent-link {
+    @apply text-foreground hover:text-accent transition-colors font-medium;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-mint px-4 py-2.5 text-sm font-semibold text-midnight transition-all duration-200 hover:brightness-110 hover:shadow-[0_0_20px_rgba(46,230,166,0.4)] active:scale-[0.98] disabled:opacity-50 cursor-pointer;
+    @apply inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-all duration-150 hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50 cursor-pointer shadow-sm;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-border bg-card/80 px-4 py-2.5 text-sm font-medium text-foreground transition-all duration-200 hover:border-mint/50 hover:bg-mint/10 hover:text-mint active:scale-[0.98] disabled:opacity-50 cursor-pointer;
+    @apply inline-flex items-center justify-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-all duration-150 hover:border-neutral-500 hover:bg-dark-elevated/50 active:scale-[0.98] disabled:opacity-50 cursor-pointer;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm text-muted transition-all duration-200 hover:text-foreground hover:bg-card/80 cursor-pointer;
+    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-muted transition-all duration-150 hover:text-foreground hover:bg-card cursor-pointer;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-border/80 bg-midnight/50 px-4 py-3 text-sm text-foreground placeholder:text-muted/60 transition-all duration-200 focus:outline-none focus:border-mint/60 focus:ring-2 focus:ring-mint/20 light:bg-snow;
-  }
-
-  .input-inline {
-    @apply rounded-lg border border-border/80 bg-midnight/40 px-3 py-1.5 text-sm text-foreground transition-all duration-200 focus:outline-none focus:border-mint/50 light:bg-snow;
+    @apply w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted/60 transition-all duration-150 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent light:bg-white;
   }
 
   .kbd {
-    @apply inline-flex items-center justify-center rounded border border-border/80 bg-midnight/60 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted shadow-inner;
+    @apply inline-flex items-center justify-center rounded border border-border bg-dark-elevated px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted light:bg-gray-100;
   }
 
   .badge {
-    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono border;
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-mono border;
   }
 
-  .badge-mint {
-    @apply bg-mint/10 text-mint border-mint/20;
+  .badge-neutral {
+    @apply bg-dark-elevated text-muted border-border light:bg-gray-100 light:text-gray-700;
   }
 
-  .badge-violet {
-    @apply bg-violet/10 text-violet border-violet/20;
+  .badge-accent {
+    @apply bg-accent-subtle text-accent border-accent-border;
   }
 
   .sr-only {

@@ -89,7 +89,7 @@ export function CategoryPage() {
     return (
       <div className="text-center py-20">
         <h1 className="text-2xl font-bold text-foreground">Category Not Found</h1>
-        <Link to="/categories" className="text-mint mt-4 inline-block font-mono">
+        <Link to="/categories" className="text-accent mt-4 inline-block font-mono">
           ← Browse all categories
         </Link>
       </div>
@@ -136,53 +136,52 @@ export function CategoryPage() {
         ]}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted mb-4 font-mono">
+      <nav aria-label="Breadcrumb" className="text-xs text-muted mb-4 font-mono">
         <ol className="flex flex-wrap items-center gap-2">
-          <li><Link to="/" className="hover:text-mint transition">Home</Link></li>
+          <li><Link to="/" className="hover:text-foreground transition-colors">Home</Link></li>
           <li>/</li>
-          <li><Link to="/categories" className="hover:text-mint transition">Categories</Link></li>
+          <li><Link to="/categories" className="hover:text-foreground transition-colors">Categories</Link></li>
           <li>/</li>
           <li className="text-foreground font-semibold">{cat.name} Tools</li>
         </ol>
       </nav>
 
       {/* CATEGORY HERO */}
-      <section className="glass rounded-3xl p-8 sm:p-12 mb-10 border border-border/80 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-mint/10 via-transparent to-violet/10 pointer-events-none" />
-        <div className="relative max-w-3xl">
-          <span className="text-3xl">{cat.icon}</span>
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground mt-3 tracking-tight">
-            {cat.name} Tools Hub
+      <section className="pb-8 border-b border-border mb-8">
+        <div className="max-w-3xl">
+          <span className="text-2xl">{cat.icon}</span>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mt-2 tracking-tight">
+            {cat.name} Tools
           </h1>
-          <p className="text-muted mt-3 text-base sm:text-lg leading-relaxed">
+          <p className="text-muted mt-2 text-sm sm:text-base leading-relaxed">
             {cat.description}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="text-xs font-mono text-mint bg-mint/10 px-3 py-1 rounded-full border border-mint/20">
-              {tools.length} Tools Available
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="badge badge-neutral">
+              {tools.length} Tools
             </span>
-            <span className="text-xs font-mono text-violet bg-violet/10 px-3 py-1 rounded-full border border-violet/20">
-              100% Client-Side Processing
+            <span className="badge badge-accent">
+              100% Client-Side
             </span>
           </div>
         </div>
       </section>
 
       {/* TOOLS GRID */}
-      <section className="mb-14">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-          All {cat.name} Utilities ({tools.length})
+      <section className="pb-10 border-b border-border mb-10">
+        <h2 className="text-lg font-bold text-foreground mb-4">
+          Available {cat.name} Utilities ({tools.length})
         </h2>
         <ToolGrid tools={tools} />
       </section>
 
       {/* CATEGORY DEEP INTRO */}
-      <section className="mb-14 glass rounded-3xl p-8 sm:p-10 border border-border/80">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+      <section className="pb-10 border-b border-border mb-10">
+        <h2 className="text-lg font-bold text-foreground mb-3">
           Overview of {cat.name} Development Tools
         </h2>
-        <div className="space-y-4 text-muted text-sm sm:text-base leading-relaxed">
+        <div className="space-y-3 text-muted text-xs sm:text-sm leading-relaxed">
           {categoryDetails.intro.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
@@ -191,16 +190,16 @@ export function CategoryPage() {
 
       {/* CATEGORY EXAMPLES */}
       {categoryDetails.examples.length > 0 && (
-        <section className="mb-14">
-          <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-            Realistic Usage Examples
+        <section className="pb-10 border-b border-border mb-10">
+          <h2 className="text-lg font-bold text-foreground mb-4">
+            Code & Workflow Examples
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {categoryDetails.examples.map((ex) => (
-              <div key={ex.title} className="glass rounded-2xl p-6 border border-border/70">
-                <h3 className="font-semibold text-foreground text-sm">{ex.title}</h3>
-                <p className="text-xs text-muted mt-1">{ex.desc}</p>
-                <pre className="mt-3 text-xs font-mono bg-midnight/80 p-3 rounded-xl border border-border text-mint overflow-x-auto">
+              <div key={ex.title} className="surface-card p-4">
+                <h3 className="font-semibold text-foreground text-xs">{ex.title}</h3>
+                <p className="text-[11px] text-muted mt-1">{ex.desc}</p>
+                <pre className="mt-3 text-[11px] font-mono bg-midnight p-3 rounded-lg border border-border text-accent overflow-x-auto">
                   {ex.code}
                 </pre>
               </div>
@@ -210,60 +209,62 @@ export function CategoryPage() {
       )}
 
       {/* CATEGORY FAQ */}
-      <section className="mb-14 glass rounded-3xl p-8 sm:p-10 border border-border/80">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+      <section className="pb-10 border-b border-border mb-10">
+        <h2 className="text-lg font-bold text-foreground mb-4">
           Frequently Asked Questions ({cat.name})
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {categoryDetails.faqs.map((f) => (
-            <div key={f.question} className="rounded-2xl border border-border/60 bg-card/40 p-5">
-              <h3 className="font-semibold text-sm text-mint">{f.question}</h3>
-              <p className="text-xs text-muted mt-2 leading-relaxed">{f.answer}</p>
+            <div key={f.question} className="surface-card p-4">
+              <h3 className="font-semibold text-xs text-foreground">{f.question}</h3>
+              <p className="text-xs text-muted mt-1.5 leading-relaxed">{f.answer}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* RELATED BLOGS */}
-      <section className="mb-14">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl font-bold text-foreground">
-            Related Guides & Documentation
+      <section className="pb-10 border-b border-border mb-10">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-foreground">
+            Related Documentation
           </h2>
-          <Link to="/blog" className="text-xs font-mono text-mint hover:underline">
-            View all guides →
+          <Link to="/blog" className="text-xs font-mono text-accent hover:underline">
+            All guides →
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           {categoryBlogs.map((b) => (
-            <article key={b.slug} className="glass rounded-2xl p-5 border border-border/60 hover:border-violet/40 transition">
-              <span className="text-[10px] font-mono text-violet uppercase">{b.category}</span>
-              <h3 className="font-semibold text-sm text-foreground mt-2 line-clamp-2">
-                <Link to={`/blog/${b.slug}`} className="hover:text-mint">{b.title}</Link>
-              </h3>
-              <p className="text-xs text-muted mt-2 line-clamp-2">{b.description}</p>
+            <article key={b.slug} className="surface-card surface-card-hover p-4 flex flex-col justify-between">
+              <div>
+                <span className="badge badge-neutral text-[10px] uppercase mb-2">{b.category}</span>
+                <h3 className="font-semibold text-xs text-foreground mt-2 line-clamp-2">
+                  <Link to={`/blog/${b.slug}`} className="hover:text-accent transition-colors">{b.title}</Link>
+                </h3>
+                <p className="text-[11px] text-muted mt-1 line-clamp-2">{b.description}</p>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
       {/* RELATED CATEGORIES */}
-      <section className="mb-14">
-        <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+      <section>
+        <h2 className="text-lg font-bold text-foreground mb-4">
           Explore Other Categories
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {otherCategories.slice(0, 4).map((c) => (
             <Link
               key={c.id}
               to={`/categories/${c.id}`}
-              className="glass rounded-2xl p-5 hover:border-mint/40 transition group border border-border/60"
+              className="surface-card surface-card-hover p-4 group"
             >
-              <span className="text-2xl">{c.icon}</span>
-              <h3 className="font-display font-semibold mt-2 group-hover:text-mint text-foreground text-sm">
+              <span className="text-xl">{c.icon}</span>
+              <h3 className="font-semibold mt-2 group-hover:text-accent transition-colors text-foreground text-xs">
                 {c.name}
               </h3>
-              <p className="text-xs text-muted mt-1 line-clamp-2">{c.description}</p>
+              <p className="text-[11px] text-muted mt-1 line-clamp-2">{c.description}</p>
             </Link>
           ))}
         </div>

@@ -57,65 +57,65 @@ export function ToolsPage() {
         ]}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted mb-4 font-mono">
+      <nav aria-label="Breadcrumb" className="text-xs text-muted mb-4 font-mono">
         <ol className="flex items-center gap-2">
-          <li><Link to="/" className="hover:text-mint transition">Home</Link></li>
+          <li><Link to="/" className="hover:text-foreground transition-colors">Home</Link></li>
           <li>/</li>
           <li className="text-foreground font-semibold">Developer Tools Directory</li>
         </ol>
       </nav>
 
       {/* HEADER HERO */}
-      <section className="glass rounded-3xl p-8 sm:p-10 mb-8 border border-border/80 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-mint/10 via-transparent to-violet/10 pointer-events-none" />
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-mint/10 text-mint border border-mint/20 mb-3">
-            <span>🚀 200+ Utilities</span>
+      <section className="pb-8 border-b border-border mb-8">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md text-xs font-mono bg-dark-elevated text-muted border border-border mb-3">
+            <span>● 200+ Utilities</span>
             <span>·</span>
-            <span>100% Client-Side</span>
+            <span>Client-Side Execution</span>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
+
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
             Developer Tools Directory
           </h1>
-          <p className="text-muted mt-2 text-sm sm:text-base max-w-2xl">
+          <p className="text-muted mt-2 text-xs sm:text-sm max-w-2xl leading-relaxed">
             Instant browser utilities for code formatting, token decoding, cryptography, data conversion, and responsive design.
           </p>
 
           {/* SEARCH & FILTERS */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row gap-2.5">
             <div className="relative flex-1">
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search tools by name, tag, or keyword (e.g. JSON, JWT, SQL)..."
-                className="input-field py-3 px-11"
+                className="input-field py-2 px-9 text-xs"
                 aria-label="Search tools"
               />
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm">🔍</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs">🔍</span>
             </div>
 
             <button
               type="button"
               onClick={() => setShowFav(!showFav)}
-              className={showFav ? 'btn-primary text-xs py-3 px-5' : 'btn-secondary text-xs py-3 px-5'}
+              className={showFav ? 'btn-primary text-xs py-2 px-4' : 'btn-secondary text-xs py-2 px-4'}
             >
-              {showFav ? '★ Saved Favorites' : '☆ Filter Favorites'}
+              {showFav ? '★ Starred Only' : '☆ Starred Only'}
             </button>
           </div>
 
           {/* CATEGORY FILTER PILLS */}
-          <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-border/40">
+          <div className="mt-6 flex flex-wrap gap-1.5 pt-4 border-t border-border">
             <button
               type="button"
               onClick={() => setActiveCategory('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono transition cursor-pointer ${
+              className={`px-3 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer ${
                 activeCategory === 'all'
-                  ? 'bg-mint text-midnight font-bold shadow-md'
-                  : 'bg-card/70 text-muted hover:text-foreground hover:bg-card border border-border/60'
+                  ? 'bg-accent text-white font-semibold'
+                  : 'bg-card text-muted hover:text-foreground border border-border'
               }`}
             >
-              All Tools ({TOOLS.length})
+              All ({TOOLS.length})
             </button>
 
             {CATEGORIES.map((cat) => {
@@ -126,10 +126,10 @@ export function ToolsPage() {
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono transition cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3 py-1 rounded-md text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-mint text-midnight font-bold shadow-md'
-                      : 'bg-card/70 text-muted hover:text-foreground hover:bg-card border border-border/60'
+                      ? 'bg-accent text-white font-semibold'
+                      : 'bg-card text-muted hover:text-foreground border border-border'
                   }`}
                 >
                   <span>{cat.icon}</span>
@@ -144,9 +144,9 @@ export function ToolsPage() {
       {/* RESULTS COUNT & GRID */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-xs font-mono text-muted">
-          Showing <span className="text-mint font-semibold">{tools.length}</span> tools
+          Showing <span className="text-foreground font-semibold">{tools.length}</span> tools
           {activeCategory !== 'all' && ` in ${activeCategory}`}
-          {showFav && ' (starred only)'}
+          {showFav && ' (starred)'}
         </p>
       </div>
 
