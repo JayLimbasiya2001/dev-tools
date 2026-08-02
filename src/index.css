@@ -6,25 +6,26 @@
 @custom-variant dark (&:where(html:not(.light), html:not(.light) *));
 
 @theme {
-  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-display: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
-  --color-midnight: #0b1221;
-  --color-slate: #151e32;
-  --color-mist: #8b9bb8;
-  --color-paper: #f4f7fc;
+  --color-midnight: #070b14;
+  --color-slate: #111827;
+  --color-slate-card: #0f172a;
+  --color-mist: #94a3b8;
+  --color-paper: #f8fafc;
   --color-snow: #ffffff;
   --color-mint: #2ee6a6;
-  --color-violet: #7c5cff;
-  --color-coral: #ff6b6b;
-  --color-amber: #ffb547;
+  --color-violet: #818cf8;
+  --color-coral: #f87171;
+  --color-amber: #fbbf24;
 
   --color-background: var(--color-midnight);
-  --color-foreground: #e8edf7;
+  --color-foreground: #f1f5f9;
   --color-muted: var(--color-mist);
-  --color-card: color-mix(in srgb, var(--color-slate) 80%, transparent);
-  --color-border: color-mix(in srgb, var(--color-mist) 20%, transparent);
+  --color-card: color-mix(in srgb, var(--color-slate-card) 75%, transparent);
+  --color-border: color-mix(in srgb, #334155 45%, transparent);
   --color-accent: var(--color-mint);
   --color-accent-secondary: var(--color-violet);
 }
@@ -32,66 +33,123 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
   }
 
   html.light {
+    color-scheme: light;
     --color-background: var(--color-paper);
     --color-foreground: var(--color-midnight);
-    --color-muted: #5a6b8a;
-    --color-card: color-mix(in srgb, var(--color-snow) 90%, transparent);
-    --color-border: color-mix(in srgb, var(--color-midnight) 12%, transparent);
+    --color-muted: #475569;
+    --color-card: color-mix(in srgb, var(--color-snow) 92%, transparent);
+    --color-border: color-mix(in srgb, #cbd5e1 60%, transparent);
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased min-h-screen;
-  }
-
-  ::selection {
-    @apply bg-mint/30 text-foreground;
+    @apply bg-background text-foreground font-body antialiased min-h-screen selection:bg-mint/30 selection:text-foreground;
+    background-image: 
+      radial-gradient(at 50% 0%, color-mix(in srgb, var(--color-violet) 12%, transparent) 0px, transparent 75%),
+      radial-gradient(at 100% 100%, color-mix(in srgb, var(--color-mint) 8%, transparent) 0px, transparent 65%);
+    background-attachment: fixed;
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-violet;
+    @apply outline-2 outline-offset-2 outline-violet/80;
+  }
+
+  /* Custom high-tech scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-mist) 25%, transparent);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-mint) 50%, transparent);
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-card/60 backdrop-blur-xl border border-border;
+    @apply bg-card/70 backdrop-blur-2xl border border-border/80 shadow-lg;
+    box-shadow: 
+      0 4px 20px -2px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-hover {
+    @apply transition-all duration-200 hover:border-mint/40 hover:bg-card/90;
+    &:hover {
+      box-shadow: 
+        0 8px 30px -4px rgba(46, 230, 166, 0.12),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .bg-grid-pattern {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-mint to-violet bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-mint via-emerald-400 to-violet bg-clip-text text-transparent;
+  }
+
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-violet via-indigo-400 to-mint bg-clip-text text-transparent;
   }
 
   .glow-mint {
-    box-shadow: 0 0 40px -10px color-mix(in srgb, var(--color-mint) 50%, transparent);
+    box-shadow: 0 0 35px -5px color-mix(in srgb, var(--color-mint) 45%, transparent);
+  }
+
+  .glow-violet {
+    box-shadow: 0 0 35px -5px color-mix(in srgb, var(--color-violet) 45%, transparent);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-mint px-4 py-2 text-sm font-semibold text-midnight transition hover:brightness-110 active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-xl bg-mint px-4 py-2.5 text-sm font-semibold text-midnight transition-all duration-200 hover:brightness-110 hover:shadow-[0_0_20px_rgba(46,230,166,0.4)] active:scale-[0.98] disabled:opacity-50 cursor-pointer;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-border bg-card/80 px-4 py-2 text-sm font-medium text-foreground transition hover:border-mint/40 hover:bg-mint/5 active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-xl border border-border bg-card/80 px-4 py-2.5 text-sm font-medium text-foreground transition-all duration-200 hover:border-mint/50 hover:bg-mint/10 hover:text-mint active:scale-[0.98] disabled:opacity-50 cursor-pointer;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm text-muted transition hover:text-foreground hover:bg-card/60;
+    @apply inline-flex items-center justify-center rounded-xl px-3 py-2 text-sm text-muted transition-all duration-200 hover:text-foreground hover:bg-card/80 cursor-pointer;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-border bg-midnight/30 px-4 py-2.5 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-violet/40 light:bg-snow;
+    @apply w-full rounded-xl border border-border/80 bg-midnight/50 px-4 py-3 text-sm text-foreground placeholder:text-muted/60 transition-all duration-200 focus:outline-none focus:border-mint/60 focus:ring-2 focus:ring-mint/20 light:bg-snow;
   }
 
   .input-inline {
-    @apply rounded-lg border border-border bg-midnight/30 px-3 py-1.5 text-sm light:bg-snow;
+    @apply rounded-lg border border-border/80 bg-midnight/40 px-3 py-1.5 text-sm text-foreground transition-all duration-200 focus:outline-none focus:border-mint/50 light:bg-snow;
   }
 
   .kbd {
-    @apply rounded border border-border bg-midnight/50 px-1.5 py-0.5 font-mono text-[10px] text-muted;
+    @apply inline-flex items-center justify-center rounded border border-border/80 bg-midnight/60 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted shadow-inner;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono border;
+  }
+
+  .badge-mint {
+    @apply bg-mint/10 text-mint border-mint/20;
+  }
+
+  .badge-violet {
+    @apply bg-violet/10 text-violet border-violet/20;
   }
 
   .sr-only {
